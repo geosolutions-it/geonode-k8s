@@ -68,20 +68,20 @@ spec:
 
           cd /usr/src; git clone https://github.com/GeoNode/geonode-contribs.git -b master
           cd /usr/src/geonode-contribs/ldap; pip install --upgrade  -e .
-          cd /usr/src/geonode/
+          cd {{ .Values.geonode.project.project_path }}/
           {{ end }}
 
-          # Add config overrides
-          cat /usr/src/geonode/geonode/geonode-k8s-settings.py >> /usr/src/geonode/geonode/settings.py
-          cat /usr/src/geonode/geonode/geonode-k8s-settings-additions.py >> /usr/src/geonode/geonode/settings.py
+          ## Add config overrides
+          cat {{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/geonode-k8s-settings.py >> {{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/settings.py
+          cat {{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/geonode-k8s-settings-additions.py >> {{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/settings.py
 
           # Setup
-          touch /usr/src/geonode/invoke.log
-          dockerize -stdout /usr/src/geonode/invoke.log /usr/src/geonode/entrypoint.sh
+          touch /var/log/invoke.log
+          dockerize -stdout /var/log/invoke.log {{ .Values.geonode.project.project_path }}/entrypoint.sh
 
           # Run web server
           touch /var/log/geonode.log
-          dockerize -stdout /var/log/geonode.log /usr/local/bin/uwsgi --ini /usr/src/geonode/uwsgi.ini
+          dockerize -stdout /var/log/geonode.log /usr/local/bin/uwsgi --ini {{ .Values.geonode.project.project_path }}/uwsgi.ini
 
         ports:
         - containerPort: 8000
@@ -132,26 +132,26 @@ spec:
         - name: cache-volume
           mountPath: /tmp
         - name: tasks-py
-          mountPath: "/usr/src/geonode/tasks.py"
+          mountPath: "{{ .Values.geonode.project.project_path }}/tasks.py"
           subPath: tasks.py
           readOnly: true
         - name: entrypoint-sh
-          mountPath: "/usr/src/geonode/entrypoint.sh"
+          mountPath: "{{ .Values.geonode.project.project_path }}/entrypoint.sh"
           subPath: entrypoint.sh
         - name: uwsgi-ini
-          mountPath: "/usr/src/geonode/uwsgi.ini"
+          mountPath: "{{ .Values.geonode.project.project_path }}/uwsgi.ini"
           subPath: uwsgi.ini
           readOnly: true
         - name: geonode-k8s-settings-py
-          mountPath: "/usr/src/geonode/geonode/geonode-k8s-settings.py"
+          mountPath: "/{{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/geonode-k8s-settings.py"
           subPath: geonode-k8s-settings.py
         - name: geonode-k8s-settings-additions-py
-          mountPath: "/usr/src/geonode/geonode/geonode-k8s-settings-additions.py"
+          mountPath: "{{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/geonode-k8s-settings-additions.py"
           subPath: geonode-k8s-settings-additions.py
           readOnly: true
         {{ if .Values.geonodeFixtures }}
         - name: geonode-fixtures
-          mountPath: "/usr/src/geonode/geonode/fixtures"
+          mountPath: "{{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/fixtures"
           readOnly: true
         {{ end }}
 
@@ -182,7 +182,7 @@ spec:
           
           cd /usr/src; git clone https://github.com/GeoNode/geonode-contribs.git -b master
           cd /usr/src/geonode-contribs/ldap; pip install --upgrade  -e .
-          cd /usr/src/geonode/
+          cd {{ .Values.geonode.project.project_path }}/
           {{ end }}
 
           {{ if .Values.geonode.sentry.enabled }}
@@ -190,11 +190,11 @@ spec:
           {{ end }}
 
           # Add config overrides
-          cat /usr/src/geonode/geonode/geonode-k8s-settings.py >> /usr/src/geonode/geonode/settings.py
-          cat /usr/src/geonode/geonode/geonode-k8s-settings-additions.py >> /usr/src/geonode/geonode/settings.py
+          cat {{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/geonode-k8s-settings.py >> {{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/settings.py
+          cat {{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/geonode-k8s-settings-additions.py >> {{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/settings.py
           # Setup
           touch /var/log/celery.log
-          dockerize -stdout /var/log/celery.log /usr/src/geonode/entrypoint.sh celery-cmd
+          dockerize -stdout /var/log/celery.log {{ .Values.geonode.project.project_path }}/entrypoint.sh celery-cmd
 
         envFrom:
         - configMapRef:
@@ -246,22 +246,22 @@ spec:
         - name: cache-volume
           mountPath: /tmp
         - name: entrypoint-sh
-          mountPath: "/usr/src/geonode/entrypoint.sh"
+          mountPath: "{{ .Values.geonode.project.project_path }}/entrypoint.sh"
           subPath: entrypoint.sh
         - name: tasks-py
-          mountPath: "/usr/src/geonode/tasks.py"
+          mountPath: "{{ .Values.geonode.project.project_path }}/tasks.py"
           subPath: tasks.py
           readOnly: true
         - name: geonode-k8s-settings-py
-          mountPath: "/usr/src/geonode/geonode/geonode-k8s-settings.py"
+          mountPath: "{{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/geonode-k8s-settings.py"
           subPath: geonode-k8s-settings.py
         - name: geonode-k8s-settings-additions-py
-          mountPath: "/usr/src/geonode/geonode/geonode-k8s-settings-additions.py"
+          mountPath: "{{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/geonode-k8s-settings-additions.py"
           subPath: geonode-k8s-settings-additions.py
           readOnly: true
         {{ if .Values.geonodeFixtures }}
         - name: geonode-fixtures
-          mountPath: "/usr/src/geonode/geonode/fixtures"
+          mountPath: "{{ .Values.geonode.project.project_path }}/{{ .Values.geonode.project.project_name }}/fixtures"
           readOnly: true
         {{ end }}
 

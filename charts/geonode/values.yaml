@@ -15,6 +15,10 @@ geonode:
     # -- size of persistant geonode storage
     storageSize: 10Gi
 
+  project:
+    project_name: geonode
+    project_path: /usr/src/geonode
+
   image:
     # -- used geonode image
     name: geonode/geonode
