@@ -63,6 +63,9 @@ data:
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_pass http://{{ include "geoserver_pod_name" . }}:{{ .Values.geoserver.port }};
+{{- if (eq .Values.geonode.general.externalScheme "https") }}
+        proxy_redirect http://$upstream https://;
+{{- end }}
       }
 
       # GeoNode
