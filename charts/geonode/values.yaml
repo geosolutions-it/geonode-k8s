@@ -343,6 +343,17 @@ geonode:
 
 # CONFIGURATION FOR GEOSERVER DEPLOYMENT
 geoserver:
+  init:
+    # -- init container name
+    container_name: geoserver-wait-for-db
+    image:
+      # init container image
+      name: jwilder/dockerize
+      # init container image tag
+      tag: "0.6.1"
+      # init container image pull policy
+    imagePullPolicy: "IfNotPresent"
+
   # -- geoserver container name
   container_name: geoserver
   image:

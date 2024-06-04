@@ -47,6 +47,13 @@ spec:
           subPath: geoserver-data-dir
         - name: geoserver-notifier-xml
           mountPath: /overrides
+      - name: {{ .Values.geoserver.init.container_name }}
+        image: "{{ .Values.geoserver.init.image.name }}:{{ .Values.geoserver.init.image.tag }}"
+        imagePullPolicy: {{ .Values.geoserver.init.imagePullPolicy }}
+        args:
+        - -timeout=60s
+        - -wait
+        - tcp://{{ include "database_hostname" . }}:{{ include "database_port" . }}
 
 {{- if not (empty .Values.geoserver.imagePullSecret) }}
       imagePullSecrets:

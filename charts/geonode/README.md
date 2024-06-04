@@ -154,6 +154,10 @@ Helm Chart for Geonode. Supported versions: Geonode: 4.2.2, Geoserver: 2.23.3-v2
 | geoserver.image.tag | string | `"2.23.3-v2"` | geoserver docker image tag |
 | geoserver.imagePullPolicy | string | `"IfNotPresent"` | geoserver image pull policy |
 | geoserver.imagePullSecret | string | `""` | pull secret to use for geoserver image |
+| geoserver.init.container_name | string | `"geoserver-wait-for-db"` | init container name |
+| geoserver.init.image.name | string | `"jwilder/dockerize"` |  |
+| geoserver.init.image.tag | string | `"0.6.1"` |  |
+| geoserver.init.imagePullPolicy | string | `"IfNotPresent"` |  |
 | geoserver.port | int | `8080` | geoserver port |
 | geoserver.resources.limits.cpu | int | `2` | limit cpu as in resource.requests.cpu (https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) |
 | geoserver.resources.limits.memory | string | `"4Gi"` | limits memory as in resource.limits.memory (https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) |
