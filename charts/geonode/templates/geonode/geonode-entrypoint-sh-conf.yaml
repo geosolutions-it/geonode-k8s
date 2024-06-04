@@ -55,6 +55,13 @@ data:
         echo "Executing Celery server $cmd for Production"
     else
         invoke prescript
+        set +e
+        until psql $(echo "$DATABASE_URL" | sed 's/^postgis/postgres/') -c '\q'
+        do
+            printf "trying connecting to DB...\n"
+            sleep 2
+        done
+        set -e
         invoke migrations
         invoke prepare
 
