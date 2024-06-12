@@ -348,9 +348,9 @@ geoserver:
     container_name: geoserver-wait-for-db
     image:
       # init container image
-      name: jwilder/dockerize
+      name: governmentpaas/psql
       # init container image tag
-      tag: "0.6.1"
+      tag: "272908a4012b68c01301d9af9270d3fdf2b1d978"
       # init container image pull policy
     imagePullPolicy: "IfNotPresent"
 
