@@ -50,10 +50,29 @@ spec:
       - name: {{ .Values.geoserver.init.container_name }}
         image: "{{ .Values.geoserver.init.image.name }}:{{ .Values.geoserver.init.image.tag }}"
         imagePullPolicy: {{ .Values.geoserver.init.imagePullPolicy }}
-        args:
-        - -timeout=60s
-        - -wait
-        - tcp://{{ include "database_hostname" . }}:{{ include "database_port" . }}
+        envFrom:
+        - configMapRef:
+            name:  {{ include "geoserver_pod_name" . }}-env
+        env:
+          # read auto generated password from secret
+          - name: GEONODE_GEODATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "database_geodata_password_secret_key_ref" . }}
+                key: {{ include "database_geodata_password_key_ref" . }}
+          - name: GEODATABASE_URL
+            value: "postgres://$(GEONODE_GEODATABASE):$(GEONODE_GEODATABASE_PASSWORD)@$(DATABASE_HOST):$(DATABASE_PORT)/$(GEONODE_GEODATABASE)"
+        command:
+        - sh
+        - -c
+        - |
+          printf "INFO: waiting for successful connection to %s\n" "$DATABASE_HOST"
+          until psql "$GEODATABASE_URL" -c '\q'
+          do
+              printf "INFO: trying connecting to DB...\n"
+              sleep 2
+          done
+          printf "INFO: psql succeeded. exiting\n"
 
 {{- if not (empty .Values.geoserver.imagePullSecret) }}
       imagePullSecrets:
