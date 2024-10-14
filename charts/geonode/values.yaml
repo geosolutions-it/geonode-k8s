@@ -348,9 +348,9 @@ geoserver:
     container_name: geoserver-wait-for-db
     image:
       # init container image
-      name: jwilder/dockerize
+      name: postgres
       # init container image tag
-      tag: "0.6.1"
+      tag: "16-alpine"
       # init container image pull policy
     imagePullPolicy: "IfNotPresent"
 
