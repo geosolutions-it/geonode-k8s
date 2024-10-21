@@ -70,7 +70,7 @@ require
 # secret key reference for the password of user:  .Values.postgres.geonode_databasename_and_username
 {{- define "database_geonode_password_secret_key_ref" -}}
 {{- if (eq .Values.postgres.type "operator") -}}
-"{{ .Values.postgres.geonode_databasename_and_username }}.{{ include "postgres_pod_name" . }}.credentials.postgresql.acid.zalan.do"
+"{{ .Values.postgres.geonode_databasename_and_username | replace "_" "-" }}.{{ include "postgres_pod_name" . }}.credentials.postgresql.acid.zalan.do"
 {{- else if and (eq .Values.postgres.type "external") (not .Values.postgres.external.secret.existingSecretName ) -}}
 "{{ .Release.Name }}-geonode-external-secrets"
 {{- else -}}
@@ -81,7 +81,7 @@ require
 # secret key reference for the password of user: .Values.postgres.geodata_databasename_and_username
 {{- define "database_geodata_password_secret_key_ref" -}}
 {{- if (eq .Values.postgres.type "operator") -}}
-"{{ .Values.postgres.geodata_databasename_and_username }}.{{ include "postgres_pod_name" . }}.credentials.postgresql.acid.zalan.do"
+"{{ .Values.postgres.geodata_databasename_and_username | replace "_" "-" }}.{{ include "postgres_pod_name" . }}.credentials.postgresql.acid.zalan.do"
 {{- else if and (eq .Values.postgres.type "external") (not .Values.postgres.external.secret.existingSecretName ) -}}
 "{{ .Release.Name }}-geodata-external-secrets"
 {{- else if .Values.postgres.external.secret.existingSecretName -}}
