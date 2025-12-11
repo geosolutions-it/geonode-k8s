@@ -619,10 +619,14 @@ memcached:
   # -- memcached replica. Loadbalanaced via kubernetes. (only one entry in django settings.py) im memcached is activated under geonode.memcached.enabled this takes place
   architecture: high-availability
   replicaCount: 1
+  image:
+    repository: bitnamilegacy/memcached
 
 # VALUES DEFINITION https://github.com/bitnami/charts/blob/master/bitnami/rabbitmq/values.yaml
 rabbitmq:
   enabled: true
+  image:
+    repository: bitnamilegacy/rabbitmq
   # -- rabbitmq raplica count
   replicaCount: 1
   auth:
